@@ -1,12 +1,12 @@
-# &#128218; Library Management System (MERN Stack)
+# &#128218; AXLIB Library Management System (MERN Stack)
 
 ![MERN Stack](https://img.shields.io/badge/MERN-Full%20Stack-blue)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://library-management-app-karan.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://axlib-7kz9.onrender.com)
 
 A complete Library Management System built with MongoDB, Express.js, React.js, and Node.js. Features role-based access control with three user types (Admin, Librarian, Student), book management with Cloudinary image uploads, issue/return tracking, and automated fine calculations.
 
 ## 🌐 Live Demo
-Check out the live demo of the project:https://library-management-app-karan.vercel.app/
+Check out the live demo of the project:https://axlib-7kz9.onrender.com
 
 **Test Credentials:**
 - Admin: admin@example.com / admin123
@@ -81,7 +81,6 @@ Check out the live demo of the project:https://library-management-app-karan.verc
 
 ### **Deployment**
 ![Render](https://img.shields.io/badge/Backend-Hosted_on_Render-%2300BFFF?logo=render)
-![Vercel](https://img.shields.io/badge/Frontend-Hosted_on_Vercel-%23000000?logo=vercel)
 ![MongoDB Atlas](https://img.shields.io/badge/Database-MongoDB_Atlas-%2347A248?logo=mongodb)
 
 - **Frontend**: Vercel (Edge Network)
@@ -96,7 +95,7 @@ Check out the live demo of the project:https://library-management-app-karan.verc
 Clone the project repository to your local machine using the following command:
 
 ```bash
-git clone https://github.com/KaranMehta1806/Library-Management.git
+git clone https://github.com/rohitsaw978/AXLib.git
 ```
 
 ### 2. Install Dependencies
@@ -169,9 +168,9 @@ npm run dev
 ## 📞 Contact
 Feel free to connect with me through the following platforms:
 
-[![LinkedIn](https://img.shields.io/badge/Karan_Mehta_-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/mehtakaran18)
-[![GitHub](https://img.shields.io/badge/Karan_Mehta_-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/KaranMehta1806)
-[![Email](https://img.shields.io/badge/mehtakaran8872@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:mehtakaran8872@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/Karan_Mehta_-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rohitsaw978)
+[![GitHub](https://img.shields.io/badge/Karan_Mehta_-181717?style=for-the-badge&logo=github&logoColor=white)]([https://github.com/rohitsaw978])
+[![Email](https://img.shields.io/badge/mehtakaran8872@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:rohitsaw09876@gmail.com)
 
 
 
