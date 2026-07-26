@@ -159,15 +159,7 @@ const AddBookForm = () => {
     <span>Add New Book</span>
   </h2>
 
-  <p
-    className="mb-0"
-    style={{
-      color: "rgba(255,255,255,.8)",
-      lineHeight: 1.3,
-    }}
-  >
-    Add a new book into your library
-  </p>
+  
 </div>
 
               {/* Body */}

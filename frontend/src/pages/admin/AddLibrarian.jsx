@@ -141,16 +141,6 @@ export default function AddLibrarian() {
                   Add Librarian
                 </h2>
 
-                <p
-                  className="mb-0"
-                  style={{
-                    color:
-                      "rgba(255,255,255,.85)"
-                  }}
-                >
-                  <br />Register a new librarian
-                </p>
-
               </div>
 
               <div className="card-body p-5">

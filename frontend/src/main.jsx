@@ -6,6 +6,10 @@ import App from './App.jsx'
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
     <GoogleOAuthProvider

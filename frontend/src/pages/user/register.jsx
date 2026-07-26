@@ -61,7 +61,9 @@ const googleLogin = useGoogleLogin({
       );
 
       showSuccessToast("Google Login Successful!");
-      navigate("/");
+      navigate("/", {
+  replace: true,
+});
     } catch (error) {
       console.error(error);
     }
