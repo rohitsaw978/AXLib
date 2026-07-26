@@ -137,12 +137,14 @@ JWT_SECRET=your_jwt_secret_key
 CLOUD_NAME=your_cloud_name
 CLOUD_API_KEY=your_cloud_api_key
 CLOUD_API_SECRET=your_cloud_api_secret
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
 
 ```
 
 #### FRONTEND .env file
 ```bash
 VITE_BACKEND_URL=https://your-backend-url.onrender.com
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
 
 ```
 ---
@@ -168,8 +170,8 @@ npm run dev
 ## 📞 Contact
 Feel free to connect with me through the following platforms:
 
-[![LinkedIn](https://img.shields.io/badge/Rohit Kumar Saw_-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rohitsaw978)
-[![GitHub](https://img.shields.io/badge/Rohit Kumar Saw_-181717?style=for-the-badge&logo=github&logoColor=white)]([https://github.com/rohitsaw978])
+[![LinkedIn](https://img.shields.io/badge/Rohit_Kumar_Saw-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rohitsaw978)
+[![GitHub](https://img.shields.io/badge/Rohit_Kumar_Saw-181717?style=for-the-badge&logo=github&logoColor=white)]([https://github.com/rohitsaw978])
 [![Email](https://img.shields.io/badge/rohitsaw09876@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:rohitsaw09876@gmail.com)
 
 
