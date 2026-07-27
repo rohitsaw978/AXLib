@@ -9,9 +9,9 @@ A complete Library Management System built with MongoDB, Express.js, React.js, a
 Check out the live demo of the project:https://axlib-7kz9.onrender.com
 
 **Test Credentials:**
-- Admin: admin@example.com / admin123
-- Librarian: librarian@example.com / lib123
-- Student: student@example.com / student123
+- Admin: admin@library.com / Admin@123
+- Librarian: librarian@library.com / 123456
+- Student: student@library.com / Student@123
 
 ## ✨ Key Features
 
