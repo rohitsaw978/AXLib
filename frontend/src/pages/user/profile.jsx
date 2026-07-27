@@ -3,6 +3,7 @@ import axios from "axios";
 import { Server_URL } from "../../utils/config";
 import "./profile.css";
 import { getAuthToken } from "../../utils/auth";
+import Loader from "../../components/Preloader";
 import {
   showErrorToast,
   showSuccessToast,
@@ -160,11 +161,7 @@ function ProfilePage() {
   // =========================
 
   if (loading) {
-    return (
-      <p className="loading">
-        Loading profile...
-      </p>
-    );
+    return <Loader />;
   }
 
   if (!user) {

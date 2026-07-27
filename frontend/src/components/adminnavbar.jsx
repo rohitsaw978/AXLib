@@ -6,6 +6,7 @@ import { FaBook, FaPlus, FaUserCircle } from "react-icons/fa";
 export default function AdminNavbar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [booksOpen, setBooksOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const token = localStorage.getItem("authToken");
@@ -55,6 +56,7 @@ export default function AdminNavbar() {
   const closeMenu = () => {
 
     setMenuOpen(false);
+    setBooksOpen(false);
 
   };
 
@@ -103,7 +105,13 @@ export default function AdminNavbar() {
         <button
           className={`navbar-toggle ${menuOpen ? "open" : ""
             }`}
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => {
+  setMenuOpen((prev) => !prev);
+
+  if (menuOpen) {
+    setBooksOpen(false);
+  }
+}}
         >
 
           <span className="toggle-bar"></span>
@@ -141,40 +149,54 @@ export default function AdminNavbar() {
 
           <div className="admin-dropdown">
 
-            <button
-              className="admin-dropdown-btn"
-              type="button"
-            >
-              Books ▾
-            </button>
+  <button
+    className="admin-dropdown-btn"
+    type="button"
+    onClick={() => setBooksOpen((prev) => !prev)}
+    aria-expanded={booksOpen}
+  >
+    Books
 
-            <div className="admin-dropdown-content">
+    <span
+      className={`dropdown-arrow ${
+        booksOpen ? "rotate" : ""
+      }`}
+    >
+      ▾
+    </span>
+  </button>
 
-              <NavLink
-                to="/admin/addbook"
-                onClick={closeMenu}
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                <FaPlus className="nav-icon" />
-                &nbsp;Add Book
-              </NavLink>
+  <div
+    className={`admin-dropdown-content ${
+      booksOpen ? "show" : ""
+    }`}
+  >
 
-              <NavLink
-                to="/admin/viewbook"
-                onClick={closeMenu}
-                className={({ isActive }) =>
-                  isActive ? "nav-link active" : "nav-link"
-                }
-              >
-                <FaBook className="nav-icon" />
-                &nbsp;View Books
-              </NavLink>
+    <NavLink
+      to="/admin/addbook"
+      onClick={closeMenu}
+      className={({ isActive }) =>
+        isActive ? "nav-link active" : "nav-link"
+      }
+    >
+      <FaPlus className="nav-icon" />
+      &nbsp;Add Book
+    </NavLink>
 
-            </div>
+    <NavLink
+      to="/admin/viewbook"
+      onClick={closeMenu}
+      className={({ isActive }) =>
+        isActive ? "nav-link active" : "nav-link"
+      }
+    >
+      <FaBook className="nav-icon" />
+      &nbsp;View Books
+    </NavLink>
 
-          </div>
+  </div>
+
+</div>
 
           {/* ===== PART 3 START ===== */}
           {/* ==========================
