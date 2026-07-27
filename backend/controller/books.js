@@ -182,17 +182,45 @@ booksController.updateBook = async (req, res) => {
 
 booksController.deleteBook = async (req, res) => {
   try {
-    const book = await BookModel.findById(req.params.id);
-    if (!book) return res.status(404).json({ error: true, message: "Book not found" });
+    const bookId = req.params.id;
+
+    // Find book
+    const book = await BookModel.findById(bookId);
+
+    if (!book) {
+      return res.status(404).json({
+        error: true,
+        message: "Book not found",
+      });
+    }
+
+    // Delete image from Cloudinary
     if (book.cloudinaryId) {
       await cloudinary.uploader.destroy(book.cloudinaryId);
     }
-    await BookModel.findByIdAndDelete(req.params.id);
+
+    // Delete all borrow/issue records related to this book
+    await BorrowModel.deleteMany({
+      bookId: bookId,
+    });
+
+    // Delete actual book
+    await BookModel.findByIdAndDelete(bookId);
+
     clearCache("homeData");
-    res.status(200).json({ message: "Book Deleted Successfully" });
+
+    res.status(200).json({
+      error: false,
+      message: "Book and related borrow records deleted successfully",
+    });
+
   } catch (error) {
-    // // console.log(deletedBook)
-    res.status(500).json({ message: "Internal Server Error", error });
+    console.error("Delete Book Error:", error);
+
+    res.status(500).json({
+      error: true,
+      message: "Internal Server Error",
+    });
   }
 };
 

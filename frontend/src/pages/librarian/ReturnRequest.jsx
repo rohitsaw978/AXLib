@@ -175,11 +175,6 @@ export default function ReturnRequest() {
                   No Pending Requests
                 </h5>
 
-                <p className="mb-0 text-secondary">
-                  Return requests will
-                  appear here.
-                </p>
-
               </div>
 
             ) : (

@@ -10,33 +10,56 @@ const librarianController = {};
 
 librarianController.bookIssued = async (req, res) => {
   try {
-    const requests = await BorrowModel.find({ status: "Issued" })
+    const requests = await BorrowModel.find({
+      status: "Issued",
+    })
       .populate("userId", "name email")
       .populate("bookId", "title")
       .sort({ createdAt: -1 });
 
-    res
-      .status(200)
-      .json({ message: "Requested books fetched successfully", requests });
+    // Remove records whose user or book has been deleted
+    const validRequests = requests.filter(
+      (item) => item.userId && item.bookId
+    );
+
+    res.status(200).json({
+      message: "Issued books fetched successfully",
+      requests: validRequests,
+    });
+
   } catch (err) {
-    console.error("Error fetching requests", err);
-    res.status(500).json({ error: "Server error" });
+    console.error("Error fetching issued books:", err);
+
+    res.status(500).json({
+      error: "Server error",
+    });
   }
 };
 
 librarianController.issueRequest = async (req, res) => {
   try {
-    const requests = await BorrowModel.find({ status: "Requested" })
+    const requests = await BorrowModel.find({
+      status: "Requested",
+    })
       .populate("userId", "name email")
       .populate("bookId", "title")
       .sort({ createdAt: -1 });
 
-    res
-      .status(200)
-      .json({ message: "Requested books fetched successfully", requests });
+    const validRequests = requests.filter(
+      (item) => item.userId && item.bookId
+    );
+
+    res.status(200).json({
+      message: "Requested books fetched successfully",
+      requests: validRequests,
+    });
+
   } catch (err) {
-    console.error("Error fetching requests", err);
-    res.status(500).json({ error: "Server error" });
+    console.error("Error fetching requests:", err);
+
+    res.status(500).json({
+      error: "Server error",
+    });
   }
 };
 
@@ -118,23 +141,40 @@ librarianController.rejectRequest = async (req, res) => {
 
 librarianController.returnRequest = async (req, res) => {
   try {
-    const requests = await BorrowModel.find({ status: "Requested Return" })
+    const requests = await BorrowModel.find({
+      status: "Requested Return",
+    })
       .populate("userId", "name email")
       .populate("bookId", "title")
       .sort({ createdAt: -1 });
 
-    const requestsWithFine = requests.map((req) => {
-      const fine = calculateFine(req.dueDate, req.returnDate);
-      return { ...req.toObject(), fine };
+    const validRequests = requests.filter(
+      (item) => item.userId && item.bookId
+    );
+
+    const requestsWithFine = validRequests.map((req) => {
+      const fine = calculateFine(
+        req.dueDate,
+        req.returnDate
+      );
+
+      return {
+        ...req.toObject(),
+        fine,
+      };
     });
 
     res.status(200).json({
-      message: "Requested books fetched successfully",
+      message: "Return requests fetched successfully",
       requests: requestsWithFine,
     });
+
   } catch (err) {
-    console.error("Error fetching requests", err);
-    res.status(500).json({ error: "Server error" });
+    console.error("Error fetching return requests:", err);
+
+    res.status(500).json({
+      error: "Server error",
+    });
   }
 };
 

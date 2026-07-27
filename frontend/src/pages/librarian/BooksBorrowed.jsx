@@ -23,7 +23,14 @@ export default function BooksBorrowed() {
         },
       });
 
-      setRequests(res.data.requests || []);
+      const allRequests = res.data.requests || [];
+
+    const validRequests = allRequests.filter(
+      (item) => item.userId && item.bookId
+    );
+
+    setRequests(validRequests);
+
     } catch (err) {
       // console.error(err);
       setRequests([]);
@@ -129,10 +136,6 @@ export default function BooksBorrowed() {
                 <h5 className="text-white">
                   No Books Issued Yet
                 </h5>
-
-                <p className="mb-0 text-secondary">
-                  Issued books will appear here.
-                </p>
 
               </div>
 

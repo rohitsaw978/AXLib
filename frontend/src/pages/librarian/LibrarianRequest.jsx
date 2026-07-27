@@ -214,12 +214,6 @@ export default function LibrarianRequests() {
                 <h5 className="text-white">
                   No Pending Requests
                 </h5>
-
-                <p className="mb-0 text-secondary">
-                  Book issue requests will
-                  appear here.
-                </p>
-
               </div>
 
             ) : (
