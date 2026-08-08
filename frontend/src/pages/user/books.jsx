@@ -30,31 +30,26 @@ const Books = () => {
         showErrorToast("Please login to issue a book.");
         return;
       }
-      const url = Server_URL + 'borrow/request-issue/' + bookid;
       const response = await axios.post(`${Server_URL}books/borrow/request-issue/${bookid}`, {}, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
       });
 
-      // alert(response.data);
       const { error, message } = response.data;
       if (error) {
-        // console.log(error);
         showErrorToast(message)
       }
       else {
         showSuccessToast(message);
       }
     } catch (error) {
-      // // console.error("Error:", error.response?.data || error.message);
       showErrorToast(error.response?.data?.message || "Something went wrong! Please try again.");
 
     }
   }
 
   async function bookDetails(bookid) {
-    // // console.log(bookid)
     navigate(`/bookdetails/${bookid}`);
   }
 
@@ -69,8 +64,8 @@ const Books = () => {
           setCategories(uniqueCategories);
         }
       })
-      .catch((error) => {
-        // console.error("Error fetching books:", error);
+      .catch(() => {
+        // ignore
       }).finally(() => {
         setIsLoading(false);
       });

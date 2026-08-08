@@ -1,4 +1,3 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { FiMail, FiPhone, FiMapPin, FiClock, FiSend } from "react-icons/fi";
@@ -20,13 +19,12 @@ const ContactUs = () => {
   const onSubmit = async (data) => {
     try {
       const url = Server_URL + "users/contact";
-      const response = await axios.post(url, data);
+      await axios.post(url, data);
       showSuccessToast(
         "Your message has been sent! We will get back to you soon."
       );
       reset();
-    } catch (error) {
-      // console.error(error);
+    } catch {
       showErrorToast(
         "There was a problem sending your message. Please try again later."
       );
@@ -50,7 +48,7 @@ const ContactUs = () => {
             </h1>
 
             <p>
-              We're here to help you with library services,
+              We&apos;re here to help you with library services,
               memberships, resources and support.
             </p>
 

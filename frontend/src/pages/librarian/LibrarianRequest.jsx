@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Server_URL } from "../../utils/config";
 import {
@@ -33,8 +33,7 @@ export default function LibrarianRequests() {
       });
 
       setRequests(res.data.requests || []);
-    } catch (err) {
-      // console.error(err);
+    } catch {
       setRequests([]);
     }
   };

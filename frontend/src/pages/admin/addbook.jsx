@@ -1,8 +1,6 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { FaBookMedical } from "react-icons/fa";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaBookMedical, FaPlusCircle } from "react-icons/fa";
 import { Server_URL } from "../../utils/config";
 import {
   showErrorToast,
@@ -52,8 +50,7 @@ const AddBookForm = () => {
         showSuccessToast(message);
         reset();
       }
-    } catch (error) {
-      // console.log(error);
+    } catch {
       showErrorToast("Failed to Add Book!");
     }
   };

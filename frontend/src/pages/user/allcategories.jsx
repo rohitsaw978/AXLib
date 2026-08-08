@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Server_URL } from "../../utils/config";
 import axios from "axios";
 import "./books.css";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Preloader";
 import { FaBook } from "react-icons/fa";
-import { showErrorToast, showSuccessToast } from "../../utils/toasthelper";
+import { showErrorToast } from "../../utils/toasthelper";
 
 export default function ViewAllCategories() {
   const [books, setBooks] = useState([]);
@@ -34,8 +34,7 @@ export default function ViewAllCategories() {
 
         setCategoryCounts(categoryCountMap);
       }
-    } catch (error) {
-      // console.error("Error fetching categories:", error);
+    } catch {
       showErrorToast("Failed to load categories.");
     } finally {
       setLoading(false);

@@ -36,7 +36,10 @@ router.post("/verify-otp", userController.verifyOTP);
 router.post("/reset-password", userController.resetPassword);
 
 // Delete User / Librarian
-router.delete("/:id", userController.deleteUser);
+router.delete("/:id", userAuth, checkRole(["admin", "librarian"]), userController.deleteUser);
+
+// User Full Details & Borrow History (Admin & Librarian)
+router.get("/history/:userId", userAuth, checkRole(["admin", "librarian"]), userController.getUserHistory);
 
 router.post("/google", userController.googleLogin);
 

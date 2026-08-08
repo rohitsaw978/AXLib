@@ -4,20 +4,19 @@ import AdminNavbar from "../components/adminnavbar";
 import AdminFooter from "../components/AdminFooter";
 import { ToastContainer } from 'react-toastify';
 
-export default function adminLayout() {
-  const [render,setRender] = useState(false);
-  const token = localStorage.getItem("authToken")
+export default function AdminLayout() {
+  const [render, setRender] = useState(false);
+  const token = localStorage.getItem("authToken");
   const role = localStorage.getItem("role");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(token && (role === "librarian" || role === "admin")){
-      setRender(true)
+    if (token && (role === "librarian" || role === "admin")) {
+      setRender(true);
+    } else {
+      navigate("/login");
     }
-    else{
-      navigate("/login")
-    }    
-  },[])
+  }, [token, role, navigate]);
 
 
   return (
@@ -30,7 +29,7 @@ export default function adminLayout() {
           }
           <ToastContainer
 position="top-right"
-autoClose={1000}
+autoClose={3500}
 hideProgressBar={false}
 newestOnTop={false}
 closeOnClick

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import "./navbar.css";
 import logo from "../assets/axlib-logo.png";
-import { FaBook, FaPlus, FaUserCircle } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 
 export default function Navbar() {
 

@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Server_URL } from "../../utils/config";
 import { motion } from "framer-motion";
-import { FaBookOpen, FaUserEdit, FaTags, FaBarcode, FaRupeeSign, FaInfoCircle } from "react-icons/fa";
-import { IoMdTime } from "react-icons/io";
+import { FaBookOpen, FaTags, FaBarcode, FaRupeeSign, FaInfoCircle } from "react-icons/fa";
 import { RiBookmarkLine } from "react-icons/ri";
 import "./bookdetails.css"
 import { showErrorToast, showSuccessToast } from "../../utils/toasthelper";
@@ -17,67 +16,32 @@ function BookDetails() {
     const [error, setError] = useState(null);
     const [isIssuing, setIsIssuing] = useState(false);
 
-    // async function issueBook(bookid) {
-    //     try {
-    //         setIsIssuing(true);
-    //         const authToken = localStorage.getItem("authToken");
-    //         if (!authToken) {
-    //             alert("Please login to issue a book.");
-    //             return;
-    //         }
-    //         const url = Server_URL + 'books/issuebook/' + bookid;
-    //         const response = await axios.post(url, {}, {
-    //             headers: {
-    //                 Authorization: `Bearer ${authToken}`,
-    //             },
-    //         });
-    //         const { error, message } = response.data;
-    //         if (error) {
-    //             alert(message);
-    //         } else {
-    //             alert(message);
-    //             // Refresh book data after issuing
-    //             const updatedResponse = await axios.get(`${Server_URL}books/${id}`);
-    //             setBook(updatedResponse.data);
-    //         }
-    //     } catch (error) {
-    //         // console.error("Error:", error.response?.data || error.message);
-    //         alert(error.response?.data?.message || "Something went wrong! Please try again.");
-    //     } finally {
-    //         setIsIssuing(false);
-    //     }
-    // }
     async function issueBook(bookid) {
         try {
-        //   // console.log("bookId");
-            // // console.log(bookid);
+          setIsIssuing(true);
           const authToken = localStorage.getItem("authToken");
-        //   // console.log(authToken)
           if (!authToken) {
             showErrorToast("Please login to issue a book.");
             return;
         }
-           const url =Server_URL + 'borrow/request-issue/'+bookid;
            const response = await axios.post(`${Server_URL}books/borrow/request-issue/${bookid}`,{}, {
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
           });
 
-          // alert(response.data);
-          const {error,message} = response.data;
-          if(error){
-            // console.log(error);
+          const {error: err, message} = response.data;
+          if(err){
             showErrorToast(message)
           }
           else{
             showSuccessToast(message);
           }
         } catch (error) {
-          // // console.error("Error:", error.response?.data || error.message);
           showErrorToast(error.response?.data?.message || "Something went wrong! Please try again.");
-          
-        }    
+        } finally {
+          setIsIssuing(false);
+        }
       }
 
     useEffect(() => {
@@ -87,8 +51,7 @@ function BookDetails() {
                 const response = await axios.get(`${Server_URL}books/${id}`);
                 setBook(response.data);
                 setError(null);
-            } catch (error) {
-                // console.error("Error fetching book:", error);
+            } catch {
                 setError("Failed to load book details. Please try again later.");
             } finally {
                 setIsLoading(false);
@@ -122,7 +85,7 @@ function BookDetails() {
         <div className="not-found-container">
             <RiBookmarkLine className="not-found-icon" />
             <h2>Book Not Found</h2>
-            <p>The book you're looking for doesn't exist or may have been removed.</p>
+            <p>The book you&apos;re looking for doesn&apos;t exist or may have been removed.</p>
         </div>
     );
 

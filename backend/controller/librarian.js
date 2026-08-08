@@ -72,13 +72,14 @@ librarianController.approveRequest = async (req, res) => {
       return res.status(404).json({ error: "Borrow request not found" });
     }
 
-    const issuedCount = await BorrowModel.countDocuments({
+    const activeOtherBooksCount = await BorrowModel.countDocuments({
       userId: borrowRequest.userId,
-      status: "Issued",
+      _id: { $ne: requestId },
+      status: { $in: ["Requested", "Issued", "Requested Return"] },
     });
 
-    if (issuedCount >= 4) {
-      return res.status(400).json({ error: "User already has 4 issued books" });
+    if (activeOtherBooksCount >= 4) {
+      return res.status(400).json({ error: "User already has 4 active/issued books. Maximum 4 books allowed per user." });
     }
 
     const book = await BookModel.findById(borrowRequest.bookId);
@@ -86,11 +87,16 @@ librarianController.approveRequest = async (req, res) => {
       return res.status(404).json({ error: "Book not found" });
     }
 
-    if (book.availableCopies < 1) {
-      return res.status(400).json({ error: "No copies available" });
+    const activeIssuedCount = await BorrowModel.countDocuments({
+      bookId: borrowRequest.bookId,
+      status: { $in: ["Issued", "Requested Return"] }
+    });
+
+    if (activeIssuedCount >= book.totalCopies || book.availableCopies < 1) {
+      return res.status(400).json({ error: "No copies available for this book" });
     }
 
-    book.availableCopies -= 1;
+    book.availableCopies = Math.max(0, book.totalCopies - (activeIssuedCount + 1));
     await book.save();
 
     borrowRequest.status = "Issued";

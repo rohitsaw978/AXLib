@@ -29,7 +29,7 @@ function VerifyOTP() {
       <div className="verify-otp-card">
         <h2 className="verify-otp-title">Verify OTP</h2>
         <p className="verify-otp-subtitle">
-          We've sent a 6-digit code to <span className="verify-otp-email">{email}</span>
+          We&apos;ve sent a 6-digit code to <span className="verify-otp-email">{email}</span>
         </p>
         
         <form className="verify-otp-form" onSubmit={handleSubmit(onSubmit)}>
@@ -112,7 +112,7 @@ function VerifyOTP() {
         </form>
         
         <div className="verify-otp-footer">
-          Didn't receive the code?{" "}
+          Didn&apos;t receive the code?{" "}
           <button 
             className="verify-otp-resend-link"
             onClick={() => alert("OTP resent!")}

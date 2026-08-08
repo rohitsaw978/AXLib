@@ -10,19 +10,6 @@ import {
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  HiMiniBookOpen,
-  HiMiniUser,
-  HiMiniTag,
-} from "react-icons/hi2";
-
-import {
-  MdEditSquare,
-  MdDelete,
-  MdOutlineQrCode2,
-} from "react-icons/md";
-
-import { BsCurrencyRupee } from "react-icons/bs";
 import { Server_URL } from "../../utils/config";
 import {
   showErrorToast,
@@ -63,8 +50,7 @@ const ViewBooks = () => {
       );
 
       setBooks(response.data.books || []);
-    } catch (err) {
-      // console.log(err);
+    } catch {
       setBooks([]);
     }
   };
@@ -91,7 +77,7 @@ const ViewBooks = () => {
 
       showSuccessToast("Book deleted successfully!");
       fetchBooks();
-    } catch (error) {
+    } catch {
       showErrorToast("Failed to delete book!");
     }
   };
@@ -135,7 +121,7 @@ const ViewBooks = () => {
       showSuccessToast("Book updated successfully!");
       setShowModal(false);
       fetchBooks();
-    } catch (error) {
+    } catch {
       showErrorToast("Failed to update book!");
     }
   };

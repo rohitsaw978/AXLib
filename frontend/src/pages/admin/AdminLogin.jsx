@@ -1,5 +1,4 @@
 import axios from "axios";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Server_URL } from "../../utils/config";
@@ -17,21 +16,20 @@ const AdminLogin = () => {
 
 
   const onSubmit = async (data) => {
-        try {
-          const url =Server_URL + 'admin/login';
-          const response = await axios.post(url, data);
-          // console.log("Response:", response.data);
-          showSuccessToast("Login Successful!");
-          navigate("/admin")
-                
-          localStorage.setItem("adminauthToken", response.data.token);
-          
-  
-        } catch (error) {
-          // console.error("Error:", error.response?.data || error.message);
-          showErrorToast("Login Failed!");
-        }
-      };
+    try {
+      const url = Server_URL + 'admin/login';
+      const response = await axios.post(url, data);
+      const role = response.data.user?.role || "admin";
+      
+      localStorage.setItem("authToken", response.data.token);
+      localStorage.setItem("role", role);
+      
+      showSuccessToast("Login Successful!");
+      navigate("/admin");
+    } catch (error) {
+      showErrorToast(error.response?.data?.message || "Login Failed!");
+    }
+  };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">

@@ -6,27 +6,33 @@ const adminController = {};
 
 adminController.addLibrarian = async (req, res) => {
     try {
-        const { name, email, password,role } = req.body;
+        const { name, email, password, role } = req.body;
+
+        const librarianCount = await UserModel.countDocuments({ role: "librarian" });
+        if (librarianCount >= 2) {
+            return res.status(400).json({ error: true, message: "Maximum limit reached. Admin can add a maximum of 2 librarians." });
+        }
+
         const existingUser = await UserModel.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ message: "Email already exists" });
+            return res.status(400).json({ error: true, message: "Email already exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = new UserModel({
             name,
-      email,
-      password: hashedPassword,
-      role
+            email,
+            password: hashedPassword,
+            role: "librarian"
         });
-// // console.log(user);
+
         await user.save();
 
-        res.status(201).json({ message: "Librarian Added Successfully" });
+        res.status(201).json({ error: false, message: "Librarian Added Successfully" });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({ error: true, message: "Internal Server Error" });
     }
 }
 

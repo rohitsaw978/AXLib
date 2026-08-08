@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiBook, FiUsers, FiAward, FiClock, FiMapPin } from 'react-icons/fi';
 import './about.css';
@@ -26,7 +25,7 @@ const AboutUs = () => {
                 an environment conducive to learning and intellectual growth.
               </p>
               <p className="about-mission-paragraph">
-                Our mission aligns with the college's commitment to academic excellence by providing comprehensive 
+                Our mission aligns with the college&apos;s commitment to academic excellence by providing comprehensive 
                 resources and services that enhance teaching, learning, and research activities.
               </p>
             </div>

@@ -1,6 +1,6 @@
-
 const  {UserModel} = require("../model/UserModel");
 const  {ContactModel} = require("../model/ContactModel");
+const { BorrowModel } = require("../model/BorrowModel");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -142,15 +142,39 @@ const token = jwt.sign(payload, JWT_SECRET, {
   }
 };
 
-userController.getUsers = async (req,res) => {
-    try {
-    const user = await UserModel.find({},"-password");
-    const totalUser = user.length;
-    res.status(200).json({error:false,message:"users fetched successfully",user,totalUser});        
-    } catch (error) {
-        res.status(500).json({error:false,message:"internal server error",error:error.message})
-    }
-}
+userController.getUsers = async (req, res) => {
+  try {
+    const rawUsers = await UserModel.find({}, "-password").lean();
+
+    const usersWithIssuedCount = await Promise.all(
+      rawUsers.map(async (u) => {
+        const issuedCount = await BorrowModel.countDocuments({
+          userId: u._id,
+          status: "Issued",
+        });
+        const activeCount = await BorrowModel.countDocuments({
+          userId: u._id,
+          status: { $in: ["Requested", "Issued", "Requested Return"] },
+        });
+        return {
+          ...u,
+          issuedBooksCount: issuedCount,
+          activeBooksCount: activeCount,
+        };
+      })
+    );
+
+    const totalUser = usersWithIssuedCount.length;
+    res.status(200).json({
+      error: false,
+      message: "users fetched successfully",
+      user: usersWithIssuedCount,
+      totalUser,
+    });
+  } catch (error) {
+    res.status(500).json({ error: true, message: "internal server error", error: error.message });
+  }
+};
 
 userController.profile =async (req,res) => {
     try {
@@ -164,9 +188,34 @@ userController.profile =async (req,res) => {
         console.error("Profile Fetch Error:", error);
         res.status(500).json({error:true,message:"Internal Server error"})
     }
-    
-
 }
+
+userController.getUserHistory = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await UserModel.findById(userId).select("-password");
+    if (!user) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
+
+    const history = await BorrowModel.find({ userId })
+      .populate("bookId", "title author category isbn price coverImage")
+      .populate("approvedBy", "name email role")
+      .sort({ createdAt: -1 });
+
+    const validHistory = history.filter((item) => item.bookId);
+
+    res.status(200).json({
+      error: false,
+      message: "User history fetched successfully",
+      user,
+      history: validHistory,
+    });
+  } catch (error) {
+    console.error("Error fetching user history:", error);
+    res.status(500).json({ error: true, message: "Internal server error" });
+  }
+};
 
 userController.addContact = async(req,res) => {
     const { name, email, subject, message } = req.body;
@@ -212,7 +261,7 @@ userController.forgotPassword = async (req, res) => {
     );
 
     await transporter.sendMail({
-      from: process.env.EMAIL,
+      from: process.env.EMAIL_USER || process.env.EMAIL,
       to: email,
       subject: "Your OTP for Password Reset",
       html: `<p>Your OTP is <strong>${otp}</strong>. It is valid for 10 minutes.</p>`,

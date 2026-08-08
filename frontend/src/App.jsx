@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, HashRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import './App.css';
-import Userlayout from "./layout/userlayout";
+import UserLayout from "./layout/userlayout";
 import AdminLayout from "./layout/adminlayout";
 
 // Lazy load all page components
@@ -40,17 +40,25 @@ function App() {
   const location = useLocation();
 
   useLayoutEffect(() => {
-  // Browser scroll restoration disable
-  if ("scrollRestoration" in window.history) {
-    window.history.scrollRestoration = "manual";
-  }
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
 
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "instant",
-  });
-}, [location.pathname]);
+    const scrollToTop = () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+
+    scrollToTop();
+    const t1 = setTimeout(scrollToTop, 0);
+    const t2 = setTimeout(scrollToTop, 100);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
   const token = localStorage.getItem("authToken");
@@ -66,7 +74,7 @@ function App() {
     ) {
       navigate("/admin", { replace: true });
     }
-  } catch (err) {
+  } catch {
     localStorage.removeItem("authToken");
   }
 }, [navigate, location.pathname]);
@@ -78,7 +86,7 @@ function App() {
             <Route path='/admin-login' element={<AdminLogin/>}/>
           </Route>
           
-          <Route path="/" element={<Userlayout/>}>
+          <Route path="/" element={<UserLayout/>}>
             <Route index element={<Home/>}/>
             <Route path='/books' element={<Books/>}/>
             <Route path='/bookdetails/:id' element={<BookDetails/>}/>
@@ -102,7 +110,7 @@ function App() {
             <Route path='issued' element={<BooksBorrowed/>}/>
           </Route>
           
-          <Route path='/user' element={<Userlayout/>}>
+          <Route path='/user' element={<UserLayout/>}>
             <Route index element={<ProfilePage/>}/>         
           </Route>
         </Routes>

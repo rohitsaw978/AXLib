@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -64,8 +64,8 @@ const googleLogin = useGoogleLogin({
       navigate("/", {
   replace: true,
 });
-    } catch (error) {
-      console.error(error);
+    } catch {
+      showErrorToast("Google Login Failed!");
     }
   },
 });
@@ -90,10 +90,7 @@ const googleLogin = useGoogleLogin({
 
       reset();
 
-    } catch (error) {
-
-      // console.log(error);
-
+    } catch {
       showErrorToast(
         "Registration Failed!"
       );
@@ -277,14 +274,39 @@ const googleLogin = useGoogleLogin({
 
             <div className="input-box">
               <FaCalendarAlt className="input-icon" />
-              <input
-                type="number"
-                placeholder="Year"
+              <select
+                defaultValue=""
                 {...register("year", {
-                  required:
-                    "Year is required",
+                  required: "Academic Year is required",
+                  setValueAs: (v) => Number(v),
                 })}
-              />
+                style={{
+                  width: "100%",
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  color: "#fff",
+                  paddingLeft: "45px",
+                  fontSize: "15px",
+                  cursor: "pointer",
+                }}
+              >
+                <option value="" disabled style={{ background: "#0f172a", color: "#94a3b8" }}>
+                  Select Academic Year
+                </option>
+                <option value="1" style={{ background: "#0f172a", color: "#fff" }}>
+                  1st Year (First Year)
+                </option>
+                <option value="2" style={{ background: "#0f172a", color: "#fff" }}>
+                  2nd Year (Second Year)
+                </option>
+                <option value="3" style={{ background: "#0f172a", color: "#fff" }}>
+                  3rd Year (Third Year)
+                </option>
+                <option value="4" style={{ background: "#0f172a", color: "#fff" }}>
+                  4th Year (Fourth Year)
+                </option>
+              </select>
             </div>
 
             {errors.year && (

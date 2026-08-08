@@ -1,11 +1,7 @@
 import {
   FaUserTie,
   FaUserPlus,
-  FaEnvelope,
-  FaLock,
-  FaUser
 } from "react-icons/fa";
-import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Server_URL } from "../../utils/config";
@@ -45,18 +41,15 @@ export default function AddLibrarian() {
         }
       );
 
-      // console.log(response.data);
-
-      showSuccessToast(
-        "Registration Successful!"
-      );
-
-      reset();
+      if (response.data.error) {
+        showErrorToast(response.data.message || "Registration Failed!");
+      } else {
+        showSuccessToast(response.data.message || "Librarian Added Successfully!");
+        reset();
+      }
     } catch (error) {
-      // console.error(error);
-
       showErrorToast(
-        "Registration Failed!"
+        error.response?.data?.message || "Registration Failed!"
       );
     }
   };

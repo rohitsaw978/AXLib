@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Server_URL } from "../../utils/config";
 import {
@@ -34,8 +34,7 @@ export default function ReturnRequest() {
       });
 
       setRequests(res.data.requests || []);
-    } catch (err) {
-      // console.error("Error fetching requests", err);
+    } catch {
       setRequests([]);
     }
   };
@@ -71,8 +70,7 @@ export default function ReturnRequest() {
       setRequests((prev) =>
         prev.filter((req) => req._id !== id)
       );
-    } catch (err) {
-      // console.error(err);
+    } catch {
       showErrorToast(
         "Failed to approve request"
       );

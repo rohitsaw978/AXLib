@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Server_URL } from "../../utils/config";
 
@@ -31,8 +31,7 @@ export default function BooksBorrowed() {
 
     setRequests(validRequests);
 
-    } catch (err) {
-      // console.error(err);
+    } catch {
       setRequests([]);
     }
   };

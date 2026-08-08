@@ -61,12 +61,23 @@ booksController.addNewBook = async (req, res) => {
 booksController.getAllBooks = async (req, res) => {
   try {
     const books = await BookModel.find().populate("addedBy", "name email role");
-    const totalBooks = books.length;
     if(!books || books.length === 0){
       return res.json({error:true,message:"No Books Found"});
     }
 
+    for (let book of books) {
+      const activeIssuedCount = await BorrowModel.countDocuments({
+        bookId: book._id,
+        status: { $in: ["Issued", "Requested Return"] }
+      });
+      const realAvailable = Math.max(0, book.totalCopies - activeIssuedCount);
+      if (book.availableCopies !== realAvailable) {
+        book.availableCopies = realAvailable;
+        await book.save();
+      }
+    }
 
+    const totalBooks = books.length;
     res.status(200).json({error:false,message:"Books fetched Successfully",books,totalBooks});
   } catch (error) {
     res.status(500).json({error:true,  message: "Internal Server Error",
@@ -150,33 +161,42 @@ booksController.updateBook = async (req, res) => {
       isbn,
       availableCopies,
       totalCopies,
-      addedBy,
-      coverImage,
+      description,
       price,
     } = req.body;
 
-    const bookUpdate = await BookModel.findByIdAndUpdate(
-      req.params.id,
-      {
-        title,
-        author,
-        category,
-        availableCopies,
-        totalCopies,
-        // coverImage,
-        price,
-      },
-      { new: true }
-    );
-    if (!bookUpdate) {
+    const book = await BookModel.findById(req.params.id);
+    if (!book) {
       return res.status(404).json({ message: "Book not found" });
     }
+
+    if (title !== undefined) book.title = title;
+    if (author !== undefined) book.author = author;
+    if (category !== undefined) book.category = category;
+    if (isbn !== undefined) book.isbn = isbn;
+    if (price !== undefined) book.price = price;
+    if (description !== undefined) book.description = description;
+
+    if (totalCopies !== undefined) {
+      book.totalCopies = Number(totalCopies);
+    }
+
+    const activeIssuedCount = await BorrowModel.countDocuments({
+      bookId: req.params.id,
+      status: { $in: ["Issued", "Requested Return"] }
+    });
+
+    if (availableCopies !== undefined) {
+      book.availableCopies = Math.min(Number(availableCopies), book.totalCopies);
+    } else {
+      book.availableCopies = Math.max(0, book.totalCopies - activeIssuedCount);
+    }
+
+    await book.save();
     clearCache("homeData");
-    res
-      .status(200)
-      .json({ message: "Book updated successfully", book: bookUpdate });
+    res.status(200).json({ message: "Book updated successfully", book });
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error });
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 };
 
@@ -231,15 +251,16 @@ booksController.issueBook = async(req,res)=>{
   const book = await BookModel.findById(bookid);
   if (!book) return res.status(404).json({ message: "Book not found!" });
 
-  const issuedBooksCount = await BorrowModel.countDocuments({ userId: userid, status: "Issued" });
-  // console.log("issuedBooksCount");
-  // console.log(issuedBooksCount);
+  const issuedBooksCount = await BorrowModel.countDocuments({
+    userId: userid,
+    status: { $in: ["Requested", "Issued", "Requested Return"] }
+  });
 
   if (issuedBooksCount >= 4) {
-    return res.status(400).json({ message: "You can issue a maximum of 4 books at a time." });
+    return res.status(400).json({ error: true, message: "You cannot issue more than 4 books at a time, including pending requests." });
   }
 
-  if(book.totalCopies <= 0){
+  if (book.availableCopies <= 0) {
     return res.status(400).json({ message: "No copies available to issue!" });
   }
 
@@ -280,7 +301,12 @@ booksController.reqIssueBook = async (req, res) => {
       return res.status(404).json({ error: true, message: "Book not found" });
     }
 
-    if (book.availableCopies < 1) {
+    const activeIssuedCount = await BorrowModel.countDocuments({
+      bookId: bookid,
+      status: { $in: ["Requested", "Issued", "Requested Return"] }
+    });
+
+    if (activeIssuedCount >= book.totalCopies || book.availableCopies < 1) {
       return res.status(400).json({ error: true, message: "No available copies to issue" });
     }
 
@@ -411,10 +437,12 @@ booksController.returnBook = async (req, res) => {
   issuedBook.returnDate = new Date();
   await issuedBook.save();
 
-  // Increment available copies in the Book model
-  await BookModel.findByIdAndUpdate(issuedBook.bookId, {
-      $inc: { availableCopies: 1 }  // Increase available copies by 1
-  });
+  // Increment available copies in the Book model if below totalCopies
+  const bookToReturn = await BookModel.findById(issuedBook.bookId);
+  if (bookToReturn && bookToReturn.availableCopies < bookToReturn.totalCopies) {
+    bookToReturn.availableCopies += 1;
+    await bookToReturn.save();
+  }
 
   res.json({ message: "Book returned successfully", issuedBook });
 } catch (error) {
